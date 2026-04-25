@@ -97,6 +97,15 @@
     background: #e0a800;
 }
 
+.btn-password {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-password:hover {
+    background-color: #0056b3;
+}
+
 .btn-delete {
     background: #dc3545;
     color: #fff;

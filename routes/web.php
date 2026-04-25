@@ -46,3 +46,5 @@ Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/{oUser}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::put('/users/{oUser}', [UserController::class, 'update'])->name('users.update');
 Route::delete('/users/{oUser}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::get('/users/{oUser}/updatePassword', [UserController::class, 'updatePassword'])->name('users.updatePassword');
+Route::put('/users/{oUser}/savePassword', [UserController::class, 'savePassword'])->name('users.savePassword');

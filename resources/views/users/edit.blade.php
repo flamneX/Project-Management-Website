@@ -4,10 +4,17 @@
 <link rel="stylesheet" href="{{ asset('css/users.css') }}">
 
 <div class="users-form-container">
+
     <div class="form-header">
-        <h1>Edit user</h1>
+        <h1>Edit User</h1>
         <p>Update user details.</p>
     </div>
+
+    @if(session('success'))
+        <div style="margin-bottom:15px; padding:10px; background:#d4edda; color:#155724; border-radius:5px;">
+            {{ session('success') }}
+        </div>
+    @endif
 
     @if ($errors->any())
         <div class="error-alert">
@@ -49,6 +56,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn-submit">Save Changes</button>
+            <a href="{{ route('users.updatePassword', $oUser) }}" class="btn-password">Update Password</a>
             <a href="{{ route('users.index') }}" class="btn-cancel">Cancel</a>
         </div>
     </form>

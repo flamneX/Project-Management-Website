@@ -5,7 +5,7 @@
 
 <div class="users-form-container">
     <div class="form-header">
-        <h1>Create user</h1>
+        <h1>Create User</h1>
         <p>Create new user.</p>
     </div>
 
@@ -36,12 +36,12 @@
 
         <div class="form-group">
             <label for="password">User Password</label>
-            <input id="password" type="password" name="password" value="" required>
+            <input id="password" type="password" name="password" value="" required placeholder="Password">
         </div>
 
         <div class="form-group">
             <label for="confirm-password">Confirm User Password</label>
-            <input id="confirm-password" type="password" name="confirm-password" value="" required>
+            <input id="confirm-password" type="password" name="confirm-password" value="" required placeholder="Password Confirmation">
         </div>
 
         <div class="form-group">

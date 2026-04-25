@@ -137,4 +137,43 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully.');
     }
+
+    
+    public function updatePassword(User $oUser)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        Gate::authorize('update', $user);
+
+        return view('users.updatePassword', compact('oUser'));
+    }
+
+    public function savePassword(Request $request, User $oUser)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        Gate::authorize('update', $user);
+
+        $validated = $request->validate([
+            'password' => ['required', 'string', 'max:255', 'min:6', "same:confirm-password"],
+        ], [
+            'password.required' => "The user password is required.",
+            'password.same' => "The confirmation password does not match.",
+        ]);
+
+        $oUser->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return redirect()->route('users.edit', compact('oUser'))
+            ->with('success', 'User Password updated successfully.');
+    }
 }
