@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -30,6 +32,53 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
 
+    public function create()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        Gate::authorize('create', User::class);
+
+        return view('users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        Gate::authorize('create', User::class);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', 'email', Rule::unique('users')],
+            'password' => ['required', 'string', 'max:255', 'min:6', "same:confirm-password"],
+            'role' => ['required']
+        ], [
+            'name.required' => 'The user name is required.',
+            'email.required' => 'The user email is required.',
+            'password.required' => "The user password is required.",
+            'password.same' => "The confirmation password does not match.",
+            'role.required' => 'The user role is required.',
+        ]);
+
+        $oUser = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
+
+        return redirect()->route('users.index')
+            ->with('success', 'Users created successfully.');
+    }
+
     public function edit(User $oUser)
     {
         $user = Auth::user();
@@ -40,18 +89,10 @@ class UserController extends Controller
 
         Gate::authorize('update', $user);
 
-        $project->load('users');
-
-        $users = User::where('role', '!=', 'admin')
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        $assignedUserIds = $project->users->pluck('id')->toArray();
-
-        return view('projects.edit', compact('project', 'users', 'assignedUserIds'));
+        return view('users.edit', compact('oUser'));
     }
 
-    public function update(Request $request, Project $project)
+    public function update(Request $request, User $oUser)
     {
         $user = Auth::user();
 
@@ -59,32 +100,26 @@ class UserController extends Controller
             return redirect()->route('login');
         }
 
-        Gate::authorize('update', $project);
+        Gate::authorize('update', $user);
 
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:1000'],
-            'users' => ['nullable', 'array'],
-            'users.*' => ['exists:users,id'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($oUser->id)],
+            'email' => ['required', 'string', 'max:255', 'email', Rule::unique('users')->ignore($oUser->id)],
+            'role' => ['required'],
         ], [
-            'title.required' => 'The project title is required.',
-            'description.required' => 'The project description is required.',
-            'users.*.exists' => 'One or more selected users do not exist.',
+            'name.required' => 'The user name is required.',
+            'email.required' => 'The user email is required.',
+            'role.required' => 'The user role is required',
         ]);
 
-        $project->update([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
+        $oUser->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role'],
         ]);
 
-        if (isset($validated['users'])) {
-            $project->users()->sync($validated['users']);
-        } else {
-            $project->users()->detach();
-        }
-
-        return redirect()->route('projects.index', $project)
-            ->with('success', 'Project updated successfully.');
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully.');
     }
 
     public function destroy(User $oUser)

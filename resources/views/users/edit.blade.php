@@ -1,4 +1,4 @@
-users-list@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/users.css') }}">
@@ -6,7 +6,7 @@ users-list@extends('layouts.app')
 <div class="users-form-container">
     <div class="form-header">
         <h1>Edit user</h1>
-        <p>Update user details and team members.</p>
+        <p>Update user details.</p>
     </div>
 
     @if ($errors->any())
@@ -20,30 +20,30 @@ users-list@extends('layouts.app')
         </div>
     @endif
 
-    <form method="POST" action="{{ route('users.update', $user) }}">
+    <form method="POST" action="{{ route('users.update', $oUser) }}">
         @csrf
         @method('PUT')
 
         <div class="form-group">
-            <label for="title">user Title *</label>
-            <input id="title" type="text" name="title" value="{{ old('title', $user->title) }}" required placeholder="e.g. Website Redesign">
+            <label for="name">User Name</label>
+            <input id="name" type="text" name="name" value="{{ old('name', $oUser->name) }}" required placeholder="e.g. Bob">
+        </div>
+        <div class="form-group">
+            <label for="email">User Email</label>
+            <input id="email" type="text" name="email" value="{{ old('email', $oUser->email) }}" required placeholder="e.g. bob@example.com">
         </div>
 
         <div class="form-group">
-            <label for="description">Description *</label>
-            <textarea id="description" name="description" required placeholder="Describe the user goals and scope...">{{ old('description', $user->description) }}</textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Team Members</label>
+            <label>User Role</label>
             <div class="users-checkboxes">
-                @foreach ($users as $user)
-                    <div class="user-checkbox">
-                        <input id="user_{{ $user->id }}" type="checkbox" name="users[]" value="{{ $user->id }}"
-                            {{ (in_array($user->id, $assignedUserIds) || (is_array(old('users')) && in_array($user->id, old('users')))) ? 'checked' : '' }}>
-                        <label for="user_{{ $user->id }}">{{ $user->name }}</label>
-                    </div>
-                @endforeach
+                <div class="user-checkbox">
+                    <input id="admin" type="radio" name="role" value="admin" {{ (string)($oUser->role) === 'admin' ? 'checked' : '' }} required>
+                    <label for="admin">Admin</label>
+                </div>
+                <div class="user-checkbox">
+                    <input id="user" type="radio" name="role" value="user" {{ (string)($oUser->role) === 'user' ? 'checked' : '' }}>
+                    <label for="user">User</label>
+                </div>
             </div>
         </div>
 
