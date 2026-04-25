@@ -7,27 +7,6 @@ use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\ActivityController;
 
-Route::view('/posts/create', 'post.create');
-Route::post('/posts', [PostController::class, 'create']);
-
-
-
-Route::get('/posts/create', [PostController::class, 'create']);
-Route::get('/posts/edit', [PostController::class, 'edit']);
-Route::get('/posts/delete', [PostController::class, 'delete']);
-
-Route::get('/posts/index', [PostController::class, 'index']);
-Route::delete('/posts/{post}', [PostController::class, 'destroy']);
-
-Route::get('/posts/{post}', [PostController::class, 'show']);
-
-
-Route::post('/posts', [PostController::class, 'create']);
-/* V2
-Route::get('/posts/create', [PostController::class, 'create'])->middleware('can:isAuthor')->name('post.create');
-Route::get('/posts/edit', [PostController::class, 'edit'])->middleware('can:isAuthor')->name('post.edit');
-Route::get('/posts/delete', [PostController::class, 'delete'])->middleware('can:isAdmin')->name('post.delete');
-*/
 
 Route::view('/', 'welcome');
 Auth::routes();
