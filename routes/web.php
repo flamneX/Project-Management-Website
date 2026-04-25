@@ -7,9 +7,10 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\UserController;
 
 
-Route::view('/', 'welcome');
+Route::redirect('/', '/home');
 Auth::routes();
 Route::get('/login/admin', [LoginController::class, 'showAdminLoginForm']);
 Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
@@ -38,3 +39,10 @@ Route::post('/projects', [ProjectController::class, 'store'])->name('projects.st
 Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
 Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
 Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::get('/users/{oUser}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::put('/users/{oUser}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{oUser}', [UserController::class, 'destroy'])->name('users.destroy');

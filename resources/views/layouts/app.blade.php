@@ -54,6 +54,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('projects.index') }}">Projects</a>
                             </li>
+
+                            @if ($navUser->role === 'admin')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                                </li>
+                            @endif
                         @endif
                     </ul>
 
