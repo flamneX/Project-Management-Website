@@ -61,7 +61,7 @@
         <div class="form-actions">
             <button type="submit" class="btn-submit">Save Changes</button>
             <a href="{{ route('users.updatePassword', $oUser) }}" class="btn-password">Update Password</a>
-            <a href="{{ route('users.index') }}" class="btn-cancel">Cancel</a>
+            <a href="{{ route(($user->role === 'admin') ? 'users.index' : 'home') }}" class="btn-cancel">Cancel</a>
         </div>
     </form>
 </div>
